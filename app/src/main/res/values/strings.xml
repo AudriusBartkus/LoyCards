@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">LoyCards</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="my_cards">Mano kortelės</string>
+    <string name="offers">Pasiūlymai</string>
+    <string name="logout">Atsijungti</string>
+    <string name="change_password">Keisti slaptažodį</string>
+    <string name="user_actions">Naudotojo veiksmai</string>
+</resources>
