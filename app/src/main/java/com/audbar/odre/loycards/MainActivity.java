@@ -13,14 +13,28 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.audbar.odre.loycards.Fragments.ChangePasswordFragment;
+import com.audbar.odre.loycards.Fragments.LoyCardsListFragment;
+import com.audbar.odre.loycards.Fragments.OffersFragment;
+import com.audbar.odre.loycards.Fragments.SettingsFragment;
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    NavigationView navigationalView = null;
+    Toolbar toolbar = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
+        LoyCardsListFragment fragment = new LoyCardsListFragment();
+        android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.toolbar, fragment);
+        fragmentTransaction.commit();
+
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -80,17 +94,30 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
+        if (id == R.id.nav_loy_cards_list) {
+            LoyCardsListFragment fragment = new LoyCardsListFragment();
+            android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.toolbar, fragment);
+            fragmentTransaction.commit();
+        } else if (id == R.id.nav_offers) {
+            OffersFragment fragment = new OffersFragment();
+            android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.toolbar, fragment);
+            fragmentTransaction.commit();
         } else if (id == R.id.nav_slideshow) {
 
-        } else if (id == R.id.nav_manage) {
+        } else if (id == R.id.nav_settings) {
+            SettingsFragment fragment = new SettingsFragment();
+            android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.toolbar, fragment);
+            fragmentTransaction.commit();
 
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
+        } else if (id == R.id.nav_change_password) {
+            ChangePasswordFragment fragment = new ChangePasswordFragment();
+            android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.toolbar, fragment);
+            fragmentTransaction.commit();
+        } else if (id == R.id.nav_logout) {
 
         }
 
