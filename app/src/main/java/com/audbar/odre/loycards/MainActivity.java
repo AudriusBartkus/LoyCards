@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity
 
         LoyCardsListFragment fragment = new LoyCardsListFragment();
         android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.toolbar, fragment);
+        fragmentTransaction.replace(R.id.content_main, fragment);
         fragmentTransaction.commit();
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -97,25 +97,25 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.nav_loy_cards_list) {
             LoyCardsListFragment fragment = new LoyCardsListFragment();
             android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.toolbar, fragment);
+            fragmentTransaction.replace(R.id.content_main, fragment);
             fragmentTransaction.commit();
         } else if (id == R.id.nav_offers) {
             OffersFragment fragment = new OffersFragment();
             android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.toolbar, fragment);
+            fragmentTransaction.replace(R.id.content_main, fragment);
             fragmentTransaction.commit();
         } else if (id == R.id.nav_slideshow) {
 
         } else if (id == R.id.nav_settings) {
             SettingsFragment fragment = new SettingsFragment();
             android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.toolbar, fragment);
+            fragmentTransaction.replace(R.id.content_main, fragment);
             fragmentTransaction.commit();
 
         } else if (id == R.id.nav_change_password) {
             ChangePasswordFragment fragment = new ChangePasswordFragment();
             android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.toolbar, fragment);
+            fragmentTransaction.replace(R.id.content_main, fragment);
             fragmentTransaction.commit();
         } else if (id == R.id.nav_logout) {
 
