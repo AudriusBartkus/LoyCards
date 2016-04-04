@@ -23,9 +23,9 @@
     <item android:title="@string/user_actions">
         <menu>
             <item
-                android:id="@+id/nav_change_password"
+                android:id="@+id/nav_login"
                 android:icon="@drawable/ic_menu_share"
-                android:title="@string/change_password" />
+                android:title="@string/login" />
             <item
                 android:id="@+id/nav_logout"
                 android:icon="@drawable/ic_menu_send"
