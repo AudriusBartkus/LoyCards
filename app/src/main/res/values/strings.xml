@@ -18,7 +18,10 @@
     <string name="email">Elektroninis paštas</string>
     <string name="password">Slaptažodis</string>
     <string name="retype_passord">Pakartoti slaptažodį</string>
-    <string name="register">Registruotis</string>
+    <string name="register">Registruoti</string>
     <string name="login">Prisijungti</string>
     <string name="server_client_id">969275403900-ih4cisjtb4kkg2acp2nfip1fdidvup2k.apps.googleusercontent.com</string>
+    <string name="add_new_card">Pridėti naują kortelę</string>
+    <string name="birth_date">Gimimo data</string>
+    <string name="card_number">Kortelės numeris</string>
 </resources>

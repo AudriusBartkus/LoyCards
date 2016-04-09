@@ -1,6 +1,7 @@
 package com.audbar.odre.loycards;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -23,6 +24,8 @@ import android.widget.TextView;
 
 import com.audbar.odre.loycards.Fragments.ChangePasswordFragment;
 import com.audbar.odre.loycards.Fragments.LoyCardsListFragment;
+import com.audbar.odre.loycards.Fragments.NewLoyCardFragment;
+import com.audbar.odre.loycards.Fragments.NewLoyCardFragment.OnFragmentInteractionListener;
 import com.audbar.odre.loycards.Fragments.OffersFragment;
 import com.audbar.odre.loycards.Fragments.SettingsFragment;
 import com.google.android.gms.auth.api.Auth;
@@ -38,7 +41,8 @@ import com.squareup.picasso.Picasso;
 
 public class MainActivity extends FragmentActivity
         implements NavigationView.OnNavigationItemSelectedListener,
-        GoogleApiClient.OnConnectionFailedListener{
+        GoogleApiClient.OnConnectionFailedListener,
+        OnFragmentInteractionListener {
 
     Toolbar toolbar = null;
     private static final int RC_SIGN_IN = 9001;
@@ -60,14 +64,6 @@ public class MainActivity extends FragmentActivity
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         //setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -95,6 +91,7 @@ public class MainActivity extends FragmentActivity
             if (result.isSuccess())
             {
                 acc = result.getSignInAccount();
+                saveUserInfo(acc);
                 updateUI(true);
             }
             else{
@@ -111,16 +108,32 @@ public class MainActivity extends FragmentActivity
                     if (result.isSuccess())
                     {
                         acc = result.getSignInAccount();
+                        saveUserInfo(acc);
                         updateUI(true);
                     }
                     else{
                         acc = null;
+                        clearUserInfo();
                         updateUI(false);
                     }
                 }
             });
         }
 
+    }
+
+    private void saveUserInfo(GoogleSignInAccount acc){
+        GlobalVariables gVar = (GlobalVariables)getApplicationContext();
+        gVar.setGvUserId(acc.getId());
+        gVar.setGvUserName(acc.getDisplayName());
+        gVar.setGvUserEmail(acc.getEmail());
+    }
+
+    private void clearUserInfo(){
+        GlobalVariables gVar = (GlobalVariables)getApplicationContext();
+        gVar.setGvUserId("");
+        gVar.setGvUserName("");
+        gVar.setGvUserEmail("");
     }
 
     @Override
@@ -227,9 +240,11 @@ public class MainActivity extends FragmentActivity
 
         if (result.isSuccess()) {
             acc = result.getSignInAccount();
+            saveUserInfo(acc);
             updateUI(true);
         } else {
             acc = null;
+            clearUserInfo();
             updateUI(false);
         }
     }
@@ -238,7 +253,6 @@ public class MainActivity extends FragmentActivity
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         Menu nav_Menu = navigationView.getMenu();
         View headerLayout = navigationView.getHeaderView(0);
-        View headerView = navigationView.getHeaderView(R.layout.nav_header_main);
         TextView tvEmail = (TextView) headerLayout.findViewById(R.id.tvUserEmail);
         TextView tvUserName = (TextView) headerLayout.findViewById(R.id.tvUserName);
         ImageView ivUserPhoto = (ImageView) headerLayout.findViewById(R.id.ivUserPhoto);
@@ -269,6 +283,7 @@ public class MainActivity extends FragmentActivity
                     public void onResult(Status status) {
                         // [START_EXCLUDE]
                         updateUI(false);
+                        clearUserInfo();
                         // [END_EXCLUDE]
                     }
                 });
@@ -281,6 +296,7 @@ public class MainActivity extends FragmentActivity
                     public void onResult(Status status) {
                         // [START_EXCLUDE]
                         updateUI(false);
+                        clearUserInfo();
                         // [END_EXCLUDE]
                     }
                 });
@@ -289,5 +305,10 @@ public class MainActivity extends FragmentActivity
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
         Log.d(TAG, "onConnectionFailed:" + connectionResult);
+    }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
     }
 }
