@@ -24,4 +24,5 @@
     <string name="add_new_card">Pridėti naują kortelę</string>
     <string name="birth_date">Gimimo data</string>
     <string name="card_number">Kortelės numeris</string>
+    <string name="activate_card">Aktyvuoti kortelę</string>
 </resources>

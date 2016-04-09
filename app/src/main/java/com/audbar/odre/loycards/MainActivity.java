@@ -24,8 +24,8 @@ import android.widget.TextView;
 
 import com.audbar.odre.loycards.Fragments.ChangePasswordFragment;
 import com.audbar.odre.loycards.Fragments.LoyCardsListFragment;
+import com.audbar.odre.loycards.Fragments.MainFragment;
 import com.audbar.odre.loycards.Fragments.NewLoyCardFragment;
-import com.audbar.odre.loycards.Fragments.NewLoyCardFragment.OnFragmentInteractionListener;
 import com.audbar.odre.loycards.Fragments.OffersFragment;
 import com.audbar.odre.loycards.Fragments.SettingsFragment;
 import com.google.android.gms.auth.api.Auth;
@@ -41,8 +41,7 @@ import com.squareup.picasso.Picasso;
 
 public class MainActivity extends FragmentActivity
         implements NavigationView.OnNavigationItemSelectedListener,
-        GoogleApiClient.OnConnectionFailedListener,
-        OnFragmentInteractionListener {
+        GoogleApiClient.OnConnectionFailedListener {
 
     Toolbar toolbar = null;
     private static final int RC_SIGN_IN = 9001;
@@ -56,10 +55,11 @@ public class MainActivity extends FragmentActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-//        LoyCardsListFragment fragment = new LoyCardsListFragment();
-//        android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-//        fragmentTransaction.replace(R.id.content_main, fragment);
-//        fragmentTransaction.commit();
+        MainFragment fragment = new MainFragment();
+        android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.content_main, fragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         //setSupportActionBar(toolbar);
@@ -178,11 +178,13 @@ public class MainActivity extends FragmentActivity
             LoyCardsListFragment fragment = new LoyCardsListFragment();
             android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
             fragmentTransaction.replace(R.id.content_main, fragment);
+            fragmentTransaction.addToBackStack(null);
             fragmentTransaction.commit();
         } else if (id == R.id.nav_offers) {
             OffersFragment fragment = new OffersFragment();
             android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
             fragmentTransaction.replace(R.id.content_main, fragment);
+            fragmentTransaction.addToBackStack(null);
             fragmentTransaction.commit();
         } else if (id == R.id.nav_slideshow) {
 
@@ -190,6 +192,7 @@ public class MainActivity extends FragmentActivity
             SettingsFragment fragment = new SettingsFragment();
             android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
             fragmentTransaction.replace(R.id.content_main, fragment);
+            fragmentTransaction.addToBackStack(null);
             fragmentTransaction.commit();
 
         } else if (id == R.id.nav_login) {
@@ -305,10 +308,5 @@ public class MainActivity extends FragmentActivity
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
         Log.d(TAG, "onConnectionFailed:" + connectionResult);
-    }
-
-    @Override
-    public void onFragmentInteraction(Uri uri) {
-
     }
 }
