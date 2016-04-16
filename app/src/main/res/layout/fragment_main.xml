@@ -12,6 +12,7 @@
         android:text="@string/activate_card"
         android:textColor="#fff"
         android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:id="@+id/b_activate_loy_card" />
 
 </RelativeLayout>

@@ -1,13 +1,21 @@
 package com.audbar.odre.loycards;
 
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.Uri;
+import android.nfc.NdefMessage;
+import android.nfc.NdefRecord;
+import android.nfc.NfcAdapter;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
+import android.util.Pair;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -21,6 +29,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.audbar.odre.loycards.Fragments.ChangePasswordFragment;
 import com.audbar.odre.loycards.Fragments.LoyCardsListFragment;
@@ -28,6 +37,9 @@ import com.audbar.odre.loycards.Fragments.MainFragment;
 import com.audbar.odre.loycards.Fragments.NewLoyCardFragment;
 import com.audbar.odre.loycards.Fragments.OffersFragment;
 import com.audbar.odre.loycards.Fragments.SettingsFragment;
+import com.audbar.odre.loycards.Model.BaseRecord;
+import com.audbar.odre.loycards.Model.RDTSpRecord;
+import com.audbar.odre.loycards.Servlet.ServletPostAsyncTask;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -39,6 +51,9 @@ import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MainActivity extends FragmentActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         GoogleApiClient.OnConnectionFailedListener {
@@ -49,6 +64,9 @@ public class MainActivity extends FragmentActivity
     private GoogleApiClient mGoogleApiClient;
     GoogleSignInAccount acc = null;
     NavigationView navigationView;
+    private NfcAdapter nfcAdpt;
+    PendingIntent nfcPendingIntent;
+    IntentFilter[] intentFiltersArray;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,7 +138,121 @@ public class MainActivity extends FragmentActivity
             });
         }
 
+        nfcAdpt = NfcAdapter.getDefaultAdapter(this);
+
+        // Check if the smartphone has NFC
+        if (nfcAdpt == null) {
+            Toast.makeText(this, "NFC not supported", Toast.LENGTH_LONG).show();
+            finish();
+        }
+
+        // Check if NFC is enabled
+        if (!nfcAdpt.isEnabled()) {
+            Toast.makeText(this, "Enable NFC before using the app", Toast.LENGTH_LONG).show();
+        }
+
+        Intent nfcIntent = new Intent(this, getClass());
+        nfcIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+
+        nfcPendingIntent =
+                PendingIntent.getActivity(this, 0, nfcIntent, 0);
+
+        // Create an Intent Filter limited to the URI or MIME type to
+        // intercept TAG scans from.
+        IntentFilter tagIntentFilter =
+                new IntentFilter(NfcAdapter.ACTION_NDEF_DISCOVERED);
+        try {
+            //tagIntentFilter.addDataScheme("http");
+            // tagIntentFilter.addDataScheme("vnd.android.nfc");
+            tagIntentFilter.addDataScheme("tel");
+            //tagIntentFilter.addDataType("text/plain");
+            intentFiltersArray = new IntentFilter[]{tagIntentFilter};
+        }
+        catch (Throwable t) {
+            t.printStackTrace();
+        }
+
+
+        new ServletPostAsyncTask().execute(new Pair<Context, String>(this, "Manfred"));
+
+
     }
+
+    @Override
+    public void onNewIntent(Intent intent) {
+        Log.d("Nfc", "New intent");
+        getTag(intent);
+    }
+
+    private void handleIntent(Intent i) {
+
+        Log.d("NFC", "Intent [" + i + "]");
+
+        getTag(i);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        nfcAdpt.enableForegroundDispatch(
+                this,
+                // Intent that will be used to package the Tag Intent.
+                nfcPendingIntent,
+                // Array of Intent Filters used to declare the Intents you
+                // wish to intercept.
+                intentFiltersArray,
+                // Array of Tag technologies you wish to handle.
+                null);
+        handleIntent(getIntent());
+    }
+
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        nfcAdpt.disableForegroundDispatch(this);
+    }
+
+
+
+
+    private void getTag(Intent i) {
+        if (i == null)
+            return ;
+
+        String type = i.getType();
+        String action = i.getAction();
+        List<BaseRecord> dataList = new ArrayList<BaseRecord>();
+
+        if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(action)) {
+            Log.d("Nfc", "Action NDEF Found");
+            Parcelable[] parcs = i.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
+
+            // List record
+
+
+            for (Parcelable p : parcs) {
+                NdefMessage msg = (NdefMessage) p;
+                final int numRec = msg.getRecords().length;
+
+                NdefRecord[] records = msg.getRecords();
+                for (NdefRecord record: records) {
+
+                    BaseRecord result = NDEFRecordFactory.createRecord(record);
+                    if (result != null)
+                    Toast.makeText(this, result.payload, Toast.LENGTH_LONG).show();
+                    if (result instanceof RDTSpRecord)
+                        dataList.addAll( ((RDTSpRecord) result).records);
+                    else
+                        dataList.add(result);
+
+                }
+            }
+        }
+
+    }
+
 
     private void saveUserInfo(GoogleSignInAccount acc){
         GlobalVariables gVar = (GlobalVariables)getApplicationContext();
