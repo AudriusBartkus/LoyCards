@@ -33,7 +33,7 @@ protected String doInBackground(Pair<Context, String>... params) {
 
         try {
         // Set up the request
-        URL url = new URL("http://10.0.2.2:8080/hello");
+        URL url = new URL("http://loycards-eb0bc.appspot.com/hello");
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("POST");
         connection.setDoInput(true);

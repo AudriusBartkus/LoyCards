@@ -173,7 +173,7 @@ public class MainActivity extends FragmentActivity
         }
 
 
-        new ServletPostAsyncTask().execute(new Pair<Context, String>(this, "Manfred"));
+       // new ServletPostAsyncTask().execute(new Pair<Context, String>(this, "Manfred"));
 
 
     }
