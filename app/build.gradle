@@ -22,8 +22,14 @@ android {
 //    dexOptions {
 //        javaMaxHeapSize "4g"
 //    }
+    packagingOptions {
+        pickFirst 'META-INF/LICENSE'
+        pickFirst 'META-INF/NOTICE'
+        //exclude 'META-INF/NOTICE.txt'
+    }
 
 }
+
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
@@ -34,8 +40,11 @@ dependencies {
     compile 'com.android.volley:volley:1.0.0'
     compile 'com.google.android.gms:play-services-auth:8.3.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
-   // compile 'com.google.appengine:appengine-api-1.0-sdk:1.9.18'
     compile 'com.squareup.okhttp3:okhttp:3.2.0'
+   // compile 'com.google.http-client:google-http-client-jackson2:1.11.0-beta'
+    compile 'com.fasterxml.jackson.core:jackson-databind:2.7.3'
+
+
 //    compile project(':servlet')
     //compile 'com.google.appengine:appengine-api-1.0-sdk:1.9.18'
 }

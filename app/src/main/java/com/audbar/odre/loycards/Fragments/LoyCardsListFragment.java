@@ -1,13 +1,7 @@
 package com.audbar.odre.loycards.Fragments;
 
 
-import android.annotation.TargetApi;
-import android.app.ActivityOptions;
-import android.content.ContentValues;
-import android.content.Intent;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
@@ -17,22 +11,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.ListView;
 
-import com.audbar.odre.loycards.Adapters.LoyCardListViewCursorAdapter;
+import com.audbar.odre.loycards.Adapters.LoyCardGridViewAdapter;
+import com.audbar.odre.loycards.Database.DatabaseMethods;
 import com.audbar.odre.loycards.Database.DbReaderContract;
 import com.audbar.odre.loycards.Database.LoyCardsDbHelper;
 import com.audbar.odre.loycards.GlobalVariables;
+import com.audbar.odre.loycards.Model.LoyCard;
 import com.audbar.odre.loycards.R;
-import com.google.android.gms.auth.api.Auth;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 
 import java.security.SecureRandom;
-import java.util.ArrayList;
-import java.util.Date;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentActivity;
+import java.util.List;
+
+import android.widget.Toast;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -141,10 +132,6 @@ public class LoyCardsListFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_loy_cards_list, container, false);
 
-        GridView lvItems = (GridView) view.findViewById(R.id.gridView);
-        LoyCardListViewCursorAdapter adapter = new LoyCardListViewCursorAdapter(this.getContext(), c);
-        lvItems.setAdapter(adapter);
-
         FloatingActionButton fabNewCard = (FloatingActionButton) view.findViewById(R.id.fab_add_new_card);
 
         fabNewCard.setOnClickListener(new View.OnClickListener() {
@@ -156,25 +143,25 @@ public class LoyCardsListFragment extends Fragment {
                 fragmentTransaction.commit();
             }
         });
+        GlobalVariables gVar = (GlobalVariables)getActivity().getApplicationContext();
+        DatabaseMethods.getUserLoyCards(getActivity(), this, gVar.getGvUserId());
 
         return view;
     }
 
-//    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-//    @Override
-//    public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-//        final Intent i = new Intent(getActivity(), ImageDetailActivity.class);
-//        i.putExtra(ImageDetailActivity.EXTRA_IMAGE, (int) id);
-//        if (Utils.hasJellyBean()) {
-//            // makeThumbnailScaleUpAnimation() looks kind of ugly here as the loading spinner may
-//            // show plus the thumbnail image in GridView is cropped. so using
-//            // makeScaleUpAnimation() instead.
-//            ActivityOptions options =
-//                    ActivityOptions.makeScaleUpAnimation(v, 0, 0, v.getWidth(), v.getHeight());
-//            getActivity().startActivity(i, options.toBundle());
-//        } else {
-//            startActivity(i);
-//        }
-//    }
+    public void handleLoyCardsResult(List<LoyCard> loyCards)
+    {
+        GridView gvItems = (GridView) this.getView().findViewById(R.id.gridView);
+
+        gvItems.setAdapter(new LoyCardGridViewAdapter(this.getContext(), loyCards));
+
+        gvItems.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Toast.makeText(getContext(), "Kolkas nerealizuota", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 
 }
