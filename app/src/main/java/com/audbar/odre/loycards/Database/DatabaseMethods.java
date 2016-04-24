@@ -40,7 +40,8 @@ public final class DatabaseMethods {
 
     }
 
-    public static void getUserLoyCards(final Activity activity, final LoyCardsListFragment fragment, final String user_id){
+    //public static void getUserLoyCards(final Activity activity, final LoyCardsListFragment fragment, final String user_id){
+    public static void getUserLoyCards(final Activity activity, final String user_id){
         action = "getUserLoyCards";
         final List<LoyCard> loyCards = new ArrayList<LoyCard>();
 
@@ -55,7 +56,9 @@ public final class DatabaseMethods {
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
-                        fragment.handleLoyCardsResult(loyCardList.loyCardList);
+                        LocalDatabaseMethods localDb = new LocalDatabaseMethods(activity.getApplicationContext());
+                        localDb.saveLoyCards(loyCardList.loyCardList);
+//                        fragment.handleLoyCardsResult(loyCardList.loyCardList);
                     }
                 },
                 new Response.ErrorListener() {

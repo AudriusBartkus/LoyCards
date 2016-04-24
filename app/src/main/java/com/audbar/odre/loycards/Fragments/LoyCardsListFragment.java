@@ -2,6 +2,7 @@ package com.audbar.odre.loycards.Fragments;
 
 
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
@@ -15,12 +16,14 @@ import android.widget.GridView;
 import com.audbar.odre.loycards.Adapters.LoyCardGridViewAdapter;
 import com.audbar.odre.loycards.Database.DatabaseMethods;
 import com.audbar.odre.loycards.Database.DbReaderContract;
+import com.audbar.odre.loycards.Database.LocalDatabaseMethods;
 import com.audbar.odre.loycards.Database.LoyCardsDbHelper;
 import com.audbar.odre.loycards.GlobalVariables;
 import com.audbar.odre.loycards.Model.LoyCard;
 import com.audbar.odre.loycards.R;
 
 import java.security.SecureRandom;
+import java.util.ArrayList;
 import java.util.List;
 
 import android.widget.Toast;
@@ -33,10 +36,7 @@ public class LoyCardsListFragment extends Fragment {
     LoyCardsDbHelper mDbHelper;
     Cursor c = null;
 
-    String[] projection = {
-            DbReaderContract.LoyaltyCardTypesDb.COLUMN_NAME_TITLE,
-            DbReaderContract.LoyaltyCardTypesDb.COLUMN_NAME_IMAGE_URL
-    };
+
 
     public LoyCardsListFragment() {
         // Required empty public constructor
@@ -64,7 +64,7 @@ public class LoyCardsListFragment extends Fragment {
 
         GlobalVariables gVar = (GlobalVariables)getActivity().getApplicationContext();
 
-        mDbHelper = new LoyCardsDbHelper(getContext());
+        mDbHelper = new LoyCardsDbHelper(getActivity().getApplicationContext());
 
         //kuriam random irasa
         //registerLoyCard(gVar.getGvUserId());
@@ -114,17 +114,6 @@ public class LoyCardsListFragment extends Fragment {
 
 
 
-    String randomString( int len ){
-        String AB = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-        SecureRandom rnd = new SecureRandom();
-
-        StringBuilder sb = new StringBuilder( len );
-        for( int i = 0; i < len; i++ )
-            sb.append( AB.charAt( rnd.nextInt(AB.length()) ) );
-        return sb.toString();
-    }
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -144,14 +133,19 @@ public class LoyCardsListFragment extends Fragment {
             }
         });
         GlobalVariables gVar = (GlobalVariables)getActivity().getApplicationContext();
-        DatabaseMethods.getUserLoyCards(getActivity(), this, gVar.getGvUserId());
+
+        //DatabaseMethods.getUserLoyCards(getActivity(), this, gVar.getGvUserId());
+
+        LocalDatabaseMethods localDb = new LocalDatabaseMethods(getActivity().getApplicationContext());
+        List<LoyCard> loyCards = localDb.getLocalLoyCards(gVar.getGvUserId());
+        handleLoyCardsResult(loyCards, view);
 
         return view;
     }
 
-    public void handleLoyCardsResult(List<LoyCard> loyCards)
+    public void handleLoyCardsResult(List<LoyCard> loyCards, View view)
     {
-        GridView gvItems = (GridView) this.getView().findViewById(R.id.gridView);
+        GridView gvItems = (GridView) view.findViewById(R.id.gridView);
 
         gvItems.setAdapter(new LoyCardGridViewAdapter(this.getContext(), loyCards));
 
@@ -163,5 +157,7 @@ public class LoyCardsListFragment extends Fragment {
             }
         });
     }
+
+
 
 }

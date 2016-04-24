@@ -4,12 +4,15 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -31,6 +34,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.audbar.odre.loycards.Database.DatabaseMethods;
+import com.audbar.odre.loycards.Database.LocalDatabaseMethods;
+import com.audbar.odre.loycards.Database.LoyCardsDbHelper;
 import com.audbar.odre.loycards.Fragments.ChangePasswordFragment;
 import com.audbar.odre.loycards.Fragments.LoyCardsListFragment;
 import com.audbar.odre.loycards.Fragments.MainFragment;
@@ -38,6 +44,7 @@ import com.audbar.odre.loycards.Fragments.NewLoyCardFragment;
 import com.audbar.odre.loycards.Fragments.OffersFragment;
 import com.audbar.odre.loycards.Fragments.SettingsFragment;
 import com.audbar.odre.loycards.Model.BaseRecord;
+import com.audbar.odre.loycards.Model.LoyCard;
 import com.audbar.odre.loycards.Model.RDTSpRecord;
 import com.audbar.odre.loycards.Servlet.ServletPostAsyncTask;
 import com.google.android.gms.auth.api.Auth;
@@ -52,6 +59,7 @@ import com.google.android.gms.common.api.Status;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class MainActivity extends FragmentActivity
@@ -67,11 +75,13 @@ public class MainActivity extends FragmentActivity
     private NfcAdapter nfcAdpt;
     PendingIntent nfcPendingIntent;
     IntentFilter[] intentFiltersArray;
+    LoyCardsDbHelper mDbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mDbHelper = new LoyCardsDbHelper(getApplicationContext());
 
         MainFragment fragment = new MainFragment();
         android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
@@ -110,6 +120,7 @@ public class MainActivity extends FragmentActivity
             {
                 acc = result.getSignInAccount();
                 saveUserInfo(acc);
+                syncUserCards(acc.getId());
                 updateUI(true);
             }
             else{
@@ -127,11 +138,13 @@ public class MainActivity extends FragmentActivity
                     {
                         acc = result.getSignInAccount();
                         saveUserInfo(acc);
+                        syncUserCards(acc.getId());
                         updateUI(true);
                     }
                     else{
                         acc = null;
                         clearUserInfo();
+                        clearUserCards();
                         updateUI(false);
                     }
                 }
@@ -259,6 +272,10 @@ public class MainActivity extends FragmentActivity
         gVar.setGvUserId(acc.getId());
         gVar.setGvUserName(acc.getDisplayName());
         gVar.setGvUserEmail(acc.getEmail());
+
+        LocalDatabaseMethods localDb = new LocalDatabaseMethods(this.getApplicationContext());
+        localDb.InsertOrUpdateUser(acc.getId(), acc.getDisplayName(), acc.getEmail(), acc.getPhotoUrl().toString(), Settings.Secure.getString(this.getContentResolver(),
+                Settings.Secure.ANDROID_ID));
     }
 
     private void clearUserInfo(){
@@ -376,12 +393,24 @@ public class MainActivity extends FragmentActivity
         if (result.isSuccess()) {
             acc = result.getSignInAccount();
             saveUserInfo(acc);
+            syncUserCards(acc.getId());
             updateUI(true);
         } else {
             acc = null;
             clearUserInfo();
+            clearUserCards();
             updateUI(false);
         }
+    }
+
+    public void syncUserCards(String user_id){
+        DatabaseMethods.getUserLoyCards(this, user_id);
+    }
+
+    public void clearUserCards(){
+        LocalDatabaseMethods localDb = new LocalDatabaseMethods(this.getApplicationContext());
+        localDb.clearLoyCards();
+
     }
 
     private void updateUI(boolean signedIn) {
@@ -419,6 +448,7 @@ public class MainActivity extends FragmentActivity
                         // [START_EXCLUDE]
                         updateUI(false);
                         clearUserInfo();
+                        clearUserCards();
                         // [END_EXCLUDE]
                     }
                 });
@@ -432,6 +462,7 @@ public class MainActivity extends FragmentActivity
                         // [START_EXCLUDE]
                         updateUI(false);
                         clearUserInfo();
+                        clearUserCards();
                         // [END_EXCLUDE]
                     }
                 });

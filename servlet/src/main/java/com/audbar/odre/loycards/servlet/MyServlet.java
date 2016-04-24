@@ -42,7 +42,8 @@ public class MyServlet extends HttpServlet {
     private static final String IMAGE_URL = "imgUrl";
     private static final String USER_NAME = "userName";
     private static final String BIRTH_DATE = "birthDate";
-
+    private static final String USER_ID = "userId";
+    private static final String CARD_TYPE_ID = "cardTypeId";
 
     @Override
     public void doGet(HttpServletRequest req, HttpServletResponse resp)
@@ -240,7 +241,7 @@ public class MyServlet extends HttpServlet {
                 resp.getWriter().println(
                         "klaida sinchronizuojant naudotojo korteles");
             } else {
-                ResultSet result = conn.createStatement().executeQuery("SELECT uc.id, uc.card_number, uc.date_registered, lct.title, lct.image_url, lct.description, uc.user_name, uc.birth_date"+
+                ResultSet result = conn.createStatement().executeQuery("SELECT uc.id, uc.card_number, uc.date_registered, uc.loy_card_type_id, lct.title, lct.image_url, lct.description, uc.user_name, u.google_id, uc.birth_date"+
                         " FROM users u"+
                         " INNER JOIN users_cards uc ON u.id = uc.user_id"+
                         " LEFT JOIN loyalty_card_types lct ON uc.loy_card_type_id = lct.id"+
@@ -259,17 +260,11 @@ public class MyServlet extends HttpServlet {
                     loyCard.addProperty(DESCRIPTION, result.getString("description"));
                     loyCard.addProperty(USER_NAME, result.getString("user_name"));
                     loyCard.addProperty(BIRTH_DATE, result.getString("birth_date"));
+                    loyCard.addProperty(USER_ID, result.getString("google_id"));
+                    loyCard.addProperty(CARD_TYPE_ID, result.getString("loy_card_type_id"));
 
                     row.add(loyCard);
 
-//                    row.add(new JsonPrimitive(result.getString("id")));
-//                    row.add(new JsonPrimitive(result.getString("card_number")));
-//                    row.add(new JsonPrimitive(result.getString("date_registered")));
-//                    row.add(new JsonPrimitive(result.getString("title")));
-//                    row.add(new JsonPrimitive(result.getString("image_url")));
-//                    row.add(new JsonPrimitive(result.getString("description")));
-//                    row.add(new JsonPrimitive(result.getString("user_name")));
-//                    row.add(new JsonPrimitive(result.getString("birth_date")));
                     data.add(loyCard);
                 }
                 jsonResponse.add("loyCardList", data);

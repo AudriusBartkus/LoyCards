@@ -19,6 +19,7 @@ public class LoyCard {
     public String userName;
     @JsonFormat(pattern = "yyyy-MM-dd")
     public Date birthDate;
-
+    public String userId;
+    public int cardTypeId;
 }
 
