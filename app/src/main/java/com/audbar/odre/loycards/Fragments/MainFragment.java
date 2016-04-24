@@ -100,57 +100,8 @@ public class MainFragment extends Fragment  {
         return view;
     }
 
-    public void testMethod(){
-
-    }
-
-//    String post(String url, String json) throws IOException {
-//        RequestBody body = RequestBody.create(JSON, json);
-//        Request request = new Request.Builder()
-//                .url(url)
-//                .post(body)
-//                .build();
-//        Response response = null;
-//        try {
-//            response = client.newCall(request).execute();
-//        } catch (Exception e)
-//        {
-//            Log.e("post", e.getCause().getMessage());
-//        }
-//        return response.body().string();
-//    }
-
-    String bowlingJson(String player1, String player2) {
-        return "{'user_name':'lolol',"
-                + "'device_id': '4sdcsdcse56'}";
-    }
 
 
-//    class RetrieveFeedTask extends AsyncTask<String, Void, String> {
-//
-//        private Exception exception;
-//
-//        protected String doInBackground(String... urls) {
-//            //String url =  "http://127.0.0.1:8080/hello";
-//            String url =  "http://loycards-eb0bc.appspot.com/hello";
-//            String json = "{'user_name':'lolol', 'device_id': '4sdcsdcse56'}";
-//
-//                RequestBody body = RequestBody.create(JSON, json);
-//                Request request = new Request.Builder()
-//                        .url(url)
-//                        .post(body)
-//                        .build();
-//                Response response = null;
-//                try {
-//                    response = client.newCall(request).execute();
-//                } catch (Exception e)
-//                {
-//                    Log.e("post", e.getCause().getMessage());
-//                }
-//            return "";
-//        }
-//
-//    }
 
     private void registerUser(){
         final String username = "aasd";

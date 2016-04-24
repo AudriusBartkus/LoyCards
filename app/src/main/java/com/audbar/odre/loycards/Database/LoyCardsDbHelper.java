@@ -94,6 +94,21 @@ public class LoyCardsDbHelper extends SQLiteOpenHelper {
         cardType.dateCreated = new Date();
         cardType.imageUrl = "https://www.maxima.lt/images/front/logos/maxima_logo.png";
 
+        insertLoyCardType(db, cardType);
+
+        cardType = new LoyCardType();
+        cardType.title = "iki";
+        cardType.description = "IKI nuolaidų kortelė";
+        cardType.dateCreated = new Date();
+        cardType.imageUrl = "http://riesutainis.com/wp-content/uploads/2015/04/Iki.png";
+
+        insertLoyCardType(db, cardType);
+
+        cardType = new LoyCardType();
+        cardType.title = "Drogas";
+        cardType.description = "Drogas lojalumo kortelė";
+        cardType.dateCreated = new Date();
+        cardType.imageUrl = "https://www.drogas.lv/css/main/images/logo_alternate.png";
 
         insertLoyCardType(db, cardType);
 

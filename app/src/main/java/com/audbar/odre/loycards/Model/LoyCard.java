@@ -21,5 +21,6 @@ public class LoyCard {
     public Date birthDate;
     public String userId;
     public int cardTypeId;
+    public String password;
 }
 

@@ -21,6 +21,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.Objects;
@@ -145,6 +146,9 @@ public class MyServlet extends HttpServlet {
                         getUserLoyCards(conn, req, resp);
                         break;
 
+                    case "registerLoyCard":
+                        registerLoyCard(conn, req, resp);
+                        break;
                     default:
                         resp.getWriter().println("Neatpazinta komanda");
 
@@ -229,6 +233,56 @@ public class MyServlet extends HttpServlet {
     }
 
 
+    public void registerLoyCard(Connection conn, HttpServletRequest req, HttpServletResponse resp){
+        JsonObject jsonResponse = new JsonObject();
+        JsonArray data = new JsonArray();
+
+        try
+        {
+            String loy_card_type = req.getParameter("loy_card_type");
+            String card_number = req.getParameter("card_number");
+            String user_name = req.getParameter("user_name");
+            String birth_date = req.getParameter("birth_date");
+            String password = req.getParameter("password");
+            String user_id = req.getParameter("user_id");
+
+
+            ResultSet result = conn.createStatement().executeQuery("SELECT id FROM loyalty_card_types WHERE title = '"+ loy_card_type +"';");
+            int loy_card_type_id = -1;
+            while (result.next()) {
+                loy_card_type_id  = result.getInt("id");
+            }
+//                conn.createStatement().executeQuery("INSERT INTO users_cards(date_registered, loy_card_type_id, card_number, user_name, birth_date, password, user_id) " +
+//                "values(curdate(), "+
+//                loy_card_type_id + ", '" +card_number + "', '" + user_name + "', '" + birth_date + "', '" + password + "', '" + user_id + "');"
+//                );
+
+            String statement = "INSERT INTO users_cards (date_registered, loy_card_type_id, card_number, user_name, birth_date, password, user_id) VALUES( ? , ? , ?, ?, ?, ?, ?)";
+            PreparedStatement stmt = conn.prepareStatement(statement);
+            stmt.setString(1, "2016-04-24");
+            stmt.setInt(2, loy_card_type_id);
+            stmt.setString(3, card_number);
+            stmt.setString(4, user_name);
+            stmt.setString(5, "2000-01-01");
+            stmt.setString(6, password);
+            stmt.setString(7, user_id);
+            int success = 2;
+            success = stmt.executeUpdate();
+            PrintWriter out = resp.getWriter();
+            if (success == 1) {
+                out.println(
+                        "Kortelė užregistruota sėkmingai");
+            } else if (success == 0) {
+                out.println(
+                        "Nepavyko užregistruoti kortelės");
+            }
+
+        } catch (SQLException | IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
     public void getUserLoyCards(Connection conn, HttpServletRequest req, HttpServletResponse resp){
         JsonObject jsonResponse = new JsonObject();
         JsonArray data = new JsonArray();
@@ -243,7 +297,7 @@ public class MyServlet extends HttpServlet {
             } else {
                 ResultSet result = conn.createStatement().executeQuery("SELECT uc.id, uc.card_number, uc.date_registered, uc.loy_card_type_id, lct.title, lct.image_url, lct.description, uc.user_name, u.google_id, uc.birth_date"+
                         " FROM users u"+
-                        " INNER JOIN users_cards uc ON u.id = uc.user_id"+
+                        " INNER JOIN users_cards uc ON u.google_id = uc.user_id"+
                         " LEFT JOIN loyalty_card_types lct ON uc.loy_card_type_id = lct.id"+
                         " WHERE u.google_id = " + google_id +";");
 

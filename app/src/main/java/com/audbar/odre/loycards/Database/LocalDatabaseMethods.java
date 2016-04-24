@@ -30,6 +30,23 @@ public class LocalDatabaseMethods {
     public void InsertOrUpdateUser(String googleId, String userName, String email, String imageUrl, String deviceId){
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
 
+        Cursor cs = db.rawQuery("select count(*) from app_users;", null);
+        String dddd;
+        if (cs.moveToFirst()) {
+            do {
+                dddd = cs.getString(0);
+            }while(cs.moveToNext());
+        }
+        cs.close();
+
+        Cursor css = db.rawQuery("select count(*) from users_cards;", null);
+        if (css.moveToFirst()) {
+            do {
+                dddd = css.getString(0);
+            }while(css.moveToNext());
+        }
+        css.close();
+
 
         Cursor c = db.rawQuery("Select * from " + DbReaderContract.UsersDb.TABLE_NAME + " where " + DbReaderContract.UsersDb.COLUMN_NAME_GOOGLE_ID + " = '" + googleId + "';", null);
         if(c.getCount() <= 0)
@@ -75,21 +92,32 @@ public class LocalDatabaseMethods {
 
     public void registerLoyCard(LoyCard card){
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put(DbReaderContract.UsersCardsDb.COLUMN_NAME_CARD_NUMBER, card.cardNumber);
-        values.put(DbReaderContract.UsersCardsDb.COLUMN_NAME_DATE_REGISTERED, String.valueOf(card.dateRegistered));
-        values.put(DbReaderContract.UsersCardsDb.COLUMN_NAME_LOY_CARD_TYPE_ID, card.cardTypeId);
-        values.put(DbReaderContract.UsersCardsDb.COLUMN_NAME_LOY_CARD_TYPE, card.cardType);
-        values.put(DbReaderContract.UsersCardsDb.COLUMN_NAME_USER_NAME, card.userName);
-        values.put(DbReaderContract.UsersCardsDb.COLUMN_NAME_USER_ID, card.userId);
-        values.put(DbReaderContract.UsersCardsDb.COLUMN_NAME_USER_BIRTH_DATE, String.valueOf(card.birthDate));
+
+        Cursor c = db.rawQuery("Select * from " + DbReaderContract.UsersCardsDb.TABLE_NAME + " where " + DbReaderContract.UsersCardsDb.COLUMN_NAME_LOY_CARD_TYPE_ID + " = " + card.cardTypeId + " AND " + DbReaderContract.UsersCardsDb.COLUMN_NAME_USER_ID + " =  '" + card.userId + "';", null);
+        if(c.getCount() <= 0)
+        {
+            //insert
+            ContentValues values = new ContentValues();
+            values.put(DbReaderContract.UsersCardsDb.COLUMN_NAME_CARD_NUMBER, card.cardNumber);
+            values.put(DbReaderContract.UsersCardsDb.COLUMN_NAME_DATE_REGISTERED, String.valueOf(card.dateRegistered));
+            values.put(DbReaderContract.UsersCardsDb.COLUMN_NAME_LOY_CARD_TYPE_ID, card.cardTypeId);
+            values.put(DbReaderContract.UsersCardsDb.COLUMN_NAME_LOY_CARD_TYPE, card.cardType);
+            values.put(DbReaderContract.UsersCardsDb.COLUMN_NAME_USER_NAME, card.userName);
+            values.put(DbReaderContract.UsersCardsDb.COLUMN_NAME_USER_ID, card.userId);
+            values.put(DbReaderContract.UsersCardsDb.COLUMN_NAME_USER_BIRTH_DATE, String.valueOf(card.birthDate));
 
 
-        long newRowId;
-        newRowId = db.insert(
-                DbReaderContract.UsersCardsDb.TABLE_NAME,
-                null,
-                values);
+            long newRowId;
+            newRowId = db.insertWithOnConflict(
+                    DbReaderContract.UsersCardsDb.TABLE_NAME,
+                    null,
+                    values,
+                    SQLiteDatabase.CONFLICT_REPLACE);
+        }
+        else {
+            //update
+        }
+        c.close();
 
         db.close();
     }
@@ -134,12 +162,13 @@ public class LocalDatabaseMethods {
         return list;
     }
 
-    public List<LoyCardType> getLocalLoyCardTypes(){
+    public List<LoyCardType> getLocalLoyCardTypes(String userId){
         List<LoyCardType> list=new ArrayList<LoyCardType>();
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
 
-        String selectQuery = "SELECT _id as id, date_created, title, description, image_url " +
-                "FROM " + DbReaderContract.LoyaltyCardTypesDb.TABLE_NAME;
+        String selectQuery = "SELECT ct._id as id, ct.date_created, ct.title, ct.description, ct.image_url " +
+                "FROM " + DbReaderContract.LoyaltyCardTypesDb.TABLE_NAME + " as ct left join " + DbReaderContract.UsersCardsDb.TABLE_NAME + " as uc on uc.loy_card_type_id = ct._id and uc.user_id = '" + userId + "' " +
+                "where uc.loy_card_type_id is null;";
 
 
 

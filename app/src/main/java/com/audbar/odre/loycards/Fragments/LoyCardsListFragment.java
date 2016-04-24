@@ -122,16 +122,6 @@ public class LoyCardsListFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_loy_cards_list, container, false);
 
         FloatingActionButton fabNewCard = (FloatingActionButton) view.findViewById(R.id.fab_add_new_card);
-
-        fabNewCard.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                NewLoyCardFragment newCardFragment = new NewLoyCardFragment();
-                android.support.v4.app.FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-                fragmentTransaction.replace(R.id.content_main, newCardFragment);
-                fragmentTransaction.addToBackStack(null);
-                fragmentTransaction.commit();
-            }
-        });
         GlobalVariables gVar = (GlobalVariables)getActivity().getApplicationContext();
 
         //DatabaseMethods.getUserLoyCards(getActivity(), this, gVar.getGvUserId());
@@ -140,6 +130,20 @@ public class LoyCardsListFragment extends Fragment {
         List<LoyCard> loyCards = localDb.getLocalLoyCards(gVar.getGvUserId());
         handleLoyCardsResult(loyCards, view);
 
+        if(gVar.totalLoyCards == loyCards.size())
+        {
+            fabNewCard.hide();
+        } else {
+            fabNewCard.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    NewLoyCardFragment newCardFragment = new NewLoyCardFragment();
+                    android.support.v4.app.FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+                    fragmentTransaction.replace(R.id.content_main, newCardFragment);
+                    fragmentTransaction.addToBackStack(null);
+                    fragmentTransaction.commit();
+                }
+            });
+        }
         return view;
     }
 
