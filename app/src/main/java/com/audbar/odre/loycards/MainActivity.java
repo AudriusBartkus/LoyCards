@@ -37,6 +37,7 @@ import android.widget.Toast;
 import com.audbar.odre.loycards.Database.DatabaseMethods;
 import com.audbar.odre.loycards.Database.LocalDatabaseMethods;
 import com.audbar.odre.loycards.Database.LoyCardsDbHelper;
+import com.audbar.odre.loycards.Fragments.AboutFragment;
 import com.audbar.odre.loycards.Fragments.ChangePasswordFragment;
 import com.audbar.odre.loycards.Fragments.LoyCardsListFragment;
 import com.audbar.odre.loycards.Fragments.MainFragment;
@@ -46,6 +47,7 @@ import com.audbar.odre.loycards.Fragments.SettingsFragment;
 import com.audbar.odre.loycards.Model.BaseRecord;
 import com.audbar.odre.loycards.Model.LoyCard;
 import com.audbar.odre.loycards.Model.RDTSpRecord;
+import com.audbar.odre.loycards.Model.User;
 import com.audbar.odre.loycards.Servlet.ServletPostAsyncTask;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -76,6 +78,7 @@ public class MainActivity extends FragmentActivity
     PendingIntent nfcPendingIntent;
     IntentFilter[] intentFiltersArray;
     LoyCardsDbHelper mDbHelper;
+    User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,7 +123,6 @@ public class MainActivity extends FragmentActivity
             {
                 acc = result.getSignInAccount();
                 saveUserInfo(acc);
-                syncUserCards(acc.getId());
                 updateUI(true);
             }
             else{
@@ -138,7 +140,6 @@ public class MainActivity extends FragmentActivity
                     {
                         acc = result.getSignInAccount();
                         saveUserInfo(acc);
-                        syncUserCards(acc.getId());
                         updateUI(true);
                     }
                     else{
@@ -273,9 +274,23 @@ public class MainActivity extends FragmentActivity
         gVar.setGvUserName(acc.getDisplayName());
         gVar.setGvUserEmail(acc.getEmail());
 
-        LocalDatabaseMethods localDb = new LocalDatabaseMethods(this.getApplicationContext());
-        localDb.InsertOrUpdateUser(acc.getId(), acc.getDisplayName(), acc.getEmail(), acc.getPhotoUrl().toString(), Settings.Secure.getString(this.getContentResolver(),
-                Settings.Secure.ANDROID_ID));
+        user = new User();
+        user.dateCreated = new Date();
+        user.deviceId = Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
+        user.userName = acc.getDisplayName();
+        user.userLastName = "";
+        user.imageUrl = acc.getPhotoUrl().toString();
+        user.email = acc.getEmail();
+        user.googleId = acc.getId();
+
+        DatabaseMethods.registerUser(this, user);
+
+        //syncUserCards(acc.getId());
+
+
+//        LocalDatabaseMethods localDb = new LocalDatabaseMethods(this.getApplicationContext());
+//        localDb.InsertOrUpdateUser(acc.getId(), acc.getDisplayName(), acc.getEmail(), acc.getPhotoUrl().toString(), Settings.Secure.getString(this.getContentResolver(),
+//                Settings.Secure.ANDROID_ID));
     }
 
     private void clearUserInfo(){
@@ -329,13 +344,15 @@ public class MainActivity extends FragmentActivity
             fragmentTransaction.replace(R.id.content_main, fragment);
             fragmentTransaction.addToBackStack(null);
             fragmentTransaction.commit();
-        } else if (id == R.id.nav_offers) {
-            OffersFragment fragment = new OffersFragment();
+        }
+        else if (id == R.id.nav_about) {
+            AboutFragment fragment = new AboutFragment();
             android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
             fragmentTransaction.replace(R.id.content_main, fragment);
             fragmentTransaction.addToBackStack(null);
             fragmentTransaction.commit();
-        } else if (id == R.id.nav_slideshow) {
+//        }
+// else if (id == R.id.nav_slideshow) {
 
         } else if (id == R.id.nav_settings) {
             SettingsFragment fragment = new SettingsFragment();
@@ -393,7 +410,7 @@ public class MainActivity extends FragmentActivity
         if (result.isSuccess()) {
             acc = result.getSignInAccount();
             saveUserInfo(acc);
-            syncUserCards(acc.getId());
+
             updateUI(true);
         } else {
             acc = null;
@@ -424,7 +441,7 @@ public class MainActivity extends FragmentActivity
             nav_Menu.findItem(R.id.nav_login).setVisible(false);
             nav_Menu.findItem(R.id.nav_logout).setVisible(true);
             nav_Menu.findItem(R.id.nav_loy_cards_list).setEnabled(true);
-            nav_Menu.findItem(R.id.nav_offers).setEnabled(true);
+            //nav_Menu.findItem(R.id.nav_offers).setEnabled(true);
             tvEmail.setText(acc.getEmail());
             tvUserName.setText(acc.getDisplayName());
             Picasso.with(this).load(acc.getPhotoUrl()).into(ivUserPhoto);
@@ -433,7 +450,7 @@ public class MainActivity extends FragmentActivity
             nav_Menu.findItem(R.id.nav_login).setVisible(true);
             nav_Menu.findItem(R.id.nav_logout).setVisible(false);
             nav_Menu.findItem(R.id.nav_loy_cards_list).setEnabled(false);
-            nav_Menu.findItem(R.id.nav_offers).setEnabled(false);
+            //nav_Menu.findItem(R.id.nav_offers).setEnabled(false);
             ivUserPhoto.setImageResource(R.drawable.common_ic_googleplayservices);
             tvEmail.setText("");
             tvUserName.setText("Neprisijungta");

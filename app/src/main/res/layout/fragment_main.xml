@@ -4,15 +4,32 @@
     android:layout_height="match_parent"
     tools:context="com.audbar.odre.loycards.Fragments.MainFragment">
 
-    <Button
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:background="@drawable/round_shape"
-        android:gravity="center_vertical|center_horizontal"
-        android:text="@string/activate_card"
-        android:textColor="#fff"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true"
-        android:id="@+id/b_activate_loy_card" />
+    <!--<Button-->
+        <!--android:layout_width="150dp"-->
+        <!--android:layout_height="150dp"-->
+        <!--android:background="@drawable/round_shape"-->
+        <!--android:gravity="center_vertical|center_horizontal"-->
+        <!--android:text="@string/activate_card"-->
+        <!--android:textColor="#fff"-->
+        <!--android:layout_centerVertical="true"-->
+        <!--android:layout_centerHorizontal="true"-->
+        <!--android:id="@+id/b_activate_loy_card" />-->
 
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageView2"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:src="@drawable/akcijos" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageView3"
+        android:src="@drawable/drogas_akcijos"
+        android:layout_marginBottom="62dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 </RelativeLayout>

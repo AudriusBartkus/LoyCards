@@ -76,6 +76,7 @@ public class LocalDatabaseMethods {
     }
 
     public void saveLoyCards(List<LoyCard> loyCards){
+        clearLoyCards();
         for (LoyCard card: loyCards) {
             registerLoyCard(card);
         }
@@ -92,6 +93,12 @@ public class LocalDatabaseMethods {
 
     public void registerLoyCard(LoyCard card){
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
+        Cursor cursor = db.rawQuery("SELECT _id FROM loyalty_card_types WHERE title = '" + card.cardType +"';", null);
+
+        if(cursor.moveToFirst()){
+            card.cardTypeId  = cursor.getInt(0);
+        }
+        cursor.close();
 
         Cursor c = db.rawQuery("Select * from " + DbReaderContract.UsersCardsDb.TABLE_NAME + " where " + DbReaderContract.UsersCardsDb.COLUMN_NAME_LOY_CARD_TYPE_ID + " = " + card.cardTypeId + " AND " + DbReaderContract.UsersCardsDb.COLUMN_NAME_USER_ID + " =  '" + card.userId + "';", null);
         if(c.getCount() <= 0)
@@ -105,7 +112,7 @@ public class LocalDatabaseMethods {
             values.put(DbReaderContract.UsersCardsDb.COLUMN_NAME_USER_NAME, card.userName);
             values.put(DbReaderContract.UsersCardsDb.COLUMN_NAME_USER_ID, card.userId);
             values.put(DbReaderContract.UsersCardsDb.COLUMN_NAME_USER_BIRTH_DATE, String.valueOf(card.birthDate));
-
+            values.put(DbReaderContract.UsersCardsDb.COLUMN_NAME_IMAGE_URL, card.imgUrl);
 
             long newRowId;
             newRowId = db.insertWithOnConflict(
@@ -193,6 +200,37 @@ public class LocalDatabaseMethods {
         }
         c.close();
         return list;
+    }
+
+    public LoyCardType getLocalLoyCardTypeByName(String cardTypeName){
+        SQLiteDatabase db = mDbHelper.getReadableDatabase();
+
+        String selectQuery = "SELECT _id as id, date_created, title, description, image_url " +
+                "FROM " + DbReaderContract.LoyaltyCardTypesDb.TABLE_NAME  +
+                " where title = '" + cardTypeName + "';";
+
+
+        LoyCardType cardType = null;
+        Cursor c = db.rawQuery(selectQuery, null);
+//        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        if (c.moveToFirst())
+        {
+            do {
+//                try{
+                cardType = new LoyCardType();
+                cardType.id = Integer.parseInt(c.getString(0));
+                //cardType.dateCreated = df.parse(c.getString(1));
+                cardType.title = c.getString(2);
+                cardType.description =c.getString(3);
+                cardType.imageUrl = c.getString(4);
+                //}
+//               catch (ParseException e){
+//                   Log.e("date parse", e.getLocalizedMessage());
+//               }
+            }while(c.moveToNext());
+        }
+        c.close();
+        return cardType;
     }
 
 }

@@ -4,7 +4,7 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
-    <string name="action_settings">Settings</string>
+    <string name="action_settings">Nustatymai</string>
     <string name="my_cards">Mano kortelės</string>
     <string name="offers">Pasiūlymai</string>
     <string name="logout">Atsijungti</string>
@@ -25,4 +25,16 @@
     <string name="birth_date">Gimimo data</string>
     <string name="card_number">Kortelės numeris</string>
     <string name="activate_card">Aktyvuoti kortelę</string>
+    <string name="mandatory_field">Laukas privalomas</string>
+    <string name="password_missmatch">Slaptažodžiai nesutampa</string>
+    <string name="send_notifications">Leisti siųsti priminimus</string>
+    <string name="turn_on_nfc">Įjungti NFC paleidus aplikaciją</string>
+    <string name="rate_app">Įvertinti aplikaciją</string>
+    <string name="save">Išsaugoti</string>
+    <string name="about">Apie</string>
+    <string name="about_text">Aplikacija sukurta\nVilniaus universiteto\nMatematikos ir informatikos fakulteto\nProgramų sistemų baigiamajam bakalauro darbui</string>
+    <string name="author">Autorius: Audrius Bartkus</string>
+    <string name="about_app">Apie aplikaciją:</string>
+    <string name="about_app_text">Aplikacija skirta lojalumo kortelių registravimui ir naudojimui atsiskaitant prekybos vietose. Aplikacijoje naudojami testavimui skirti duomenys, nesurišti su realiais parduotuvių tinklais.</string>
+    <string name="version">Versija: 1.4</string>
 </resources>

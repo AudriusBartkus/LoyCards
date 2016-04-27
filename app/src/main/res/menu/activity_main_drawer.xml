@@ -6,18 +6,19 @@
             android:id="@+id/nav_loy_cards_list"
             android:icon="@drawable/ic_menu_camera"
             android:title="@string/my_cards"/>
-        <item
-            android:id="@+id/nav_offers"
-            android:icon="@drawable/ic_menu_gallery"
-            android:title="@string/offers" />
-        <item
-            android:id="@+id/nav_slideshow"
-            android:icon="@drawable/ic_menu_slideshow"
-            android:title="Slideshow" />
+        <!--<item-->
+            <!--android:id="@+id/nav_offers"-->
+            <!--android:icon="@drawable/ic_menu_gallery"-->
+            <!--android:title="@string/offers" />-->
+
         <item
             android:id="@+id/nav_settings"
             android:icon="@drawable/ic_menu_manage"
             android:title="@string/action_settings" />
+        <item
+            android:id="@+id/nav_about"
+            android:icon="@drawable/ic_menu_share"
+            android:title="@string/about" />
     </group>
 
     <item android:title="@string/user_actions">

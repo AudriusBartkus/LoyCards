@@ -149,6 +149,9 @@ public class MyServlet extends HttpServlet {
                     case "registerLoyCard":
                         registerLoyCard(conn, req, resp);
                         break;
+                    case "registerUser":
+                        registerUser(conn, req, resp);
+                        break;
                     default:
                         resp.getWriter().println("Neatpazinta komanda");
 
@@ -233,6 +236,53 @@ public class MyServlet extends HttpServlet {
     }
 
 
+    public void registerUser(Connection conn, HttpServletRequest req, HttpServletResponse resp){
+        try
+        {
+            String date_created = req.getParameter("date_created");
+            String device_id = req.getParameter("device_id");
+            String user_name = req.getParameter("user_name");
+            String user_last_name = req.getParameter("user_last_name");
+            String image_url = req.getParameter("image_url");
+            String email = req.getParameter("email");
+            String google_id = req.getParameter("google_id");
+
+
+            ResultSet result = conn.createStatement().executeQuery("SELECT id FROM users WHERE google_id = '"+ google_id +"';");
+            if(result.next()){
+//                conn.createStatement().executeQuery("UPDATE users "+
+//                        "SET device_id ='" + device_id + "' " +
+//                        "WHERE id = "+ result.getInt("id") +";");
+            } else {
+                String statement = "INSERT INTO users (date_created, device_id, user_name, user_last_name, image_url, email, google_id) VALUES( ? , ? , ?, ?, ?, ?, ?)";
+                PreparedStatement stmt = conn.prepareStatement(statement);
+                stmt.setString(1, "2016-04-24");
+                stmt.setString(2, device_id);
+                stmt.setString(3, user_name);
+                stmt.setString(4, user_last_name);
+                stmt.setString(5, image_url);
+                stmt.setString(6, email);
+                stmt.setString(7, google_id);
+                int success = 2;
+                success = stmt.executeUpdate();
+                PrintWriter out = resp.getWriter();
+                if (success == 1) {
+                    out.println(
+                            "Naudotojas sukurtas sistemoje");
+                } else if (success == 0) {
+                    out.println(
+                            "Nepavyko sukurti naudotojo");
+                }
+            }
+
+
+
+        } catch (SQLException | IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
     public void registerLoyCard(Connection conn, HttpServletRequest req, HttpServletResponse resp){
         JsonObject jsonResponse = new JsonObject();
         JsonArray data = new JsonArray();
@@ -282,6 +332,7 @@ public class MyServlet extends HttpServlet {
         }
 
     }
+
 
     public void getUserLoyCards(Connection conn, HttpServletRequest req, HttpServletResponse resp){
         JsonObject jsonResponse = new JsonObject();

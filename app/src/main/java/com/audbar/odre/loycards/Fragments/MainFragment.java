@@ -37,20 +37,11 @@ import java.util.Map;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
-//import okhttp3.MediaType;
-//import okhttp3.OkHttpClient;
-//import okhttp3.Request;
-//import okhttp3.RequestBody;
-//import okhttp3.Response;
-
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class MainFragment extends Fragment  {
-
-//    public static final MediaType JSON
-//            = MediaType.parse("application/json; charset=utf-8");
 
 
     private static final String REGISTER_URL = "http://loycards-eb0bc.appspot.com/hello";
@@ -59,7 +50,6 @@ public class MainFragment extends Fragment  {
     public static final String KEY_PASSWORD = "device_id";
     public static final String KEY_EMAIL = "email";
 
-//    OkHttpClient client;
     public MainFragment() {
         // Required empty public constructor
     }
@@ -68,34 +58,15 @@ public class MainFragment extends Fragment  {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_main, container, false);
 
-        Button bActivateCard = (Button) view.findViewById(R.id.b_activate_loy_card);
+//        Button bActivateCard = (Button) view.findViewById(R.id.b_activate_loy_card);
 
-//        client = new OkHttpClient();
-        bActivateCard.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-//                ActivateLoyaltyCardFragment activateLoyaltyCardFragment = new ActivateLoyaltyCardFragment();
-//                activateLoyaltyCardFragment.setShowsDialog(true);
-//                activateLoyaltyCardFragment.show(getFragmentManager(), "dialog");
-                new ServletPostAsyncTask().execute(new Pair<Context, String>(getActivity(), "Manfred"));
-
-
-                  //  testMethod();
-//                try{
-//                    String response =  post("http://localhost:8080/hello", "{'user_name':'lolol', 'device_id': '4sdcsdcse56'}");
-//                    Toast.makeText(getActivity(), response, Toast.LENGTH_LONG).show();
-//                }
-//                catch (IOException e)
-//                {
-//                    Toast.makeText(getActivity(), e.getCause().getMessage(), Toast.LENGTH_LONG).show();
-//                }
-
-                registerUser();
-//                new RetrieveFeedTask().execute("");
-            }
-        });
+//        bActivateCard.setOnClickListener(new View.OnClickListener() {
+//            public void onClick(View v) {
+//            //    registerUser();
+//            }
+//        });
 
         return view;
     }
