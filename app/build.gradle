@@ -35,7 +35,6 @@ dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
     // compile 'com.google.http-client:google-http-client-jackson2:1.11.0-beta'
-    
 
 //    compile project(':servlet')
     //compile 'com.google.appengine:appengine-api-1.0-sdk:1.9.18'

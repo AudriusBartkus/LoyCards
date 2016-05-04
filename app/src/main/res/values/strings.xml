@@ -37,4 +37,9 @@
     <string name="about_app">Apie aplikaciją:</string>
     <string name="about_app_text">Aplikacija skirta lojalumo kortelių registravimui ir naudojimui atsiskaitant prekybos vietose. Aplikacijoje naudojami testavimui skirti duomenys, nesurišti su realiais parduotuvių tinklais.</string>
     <string name="version">Versija: 1.4</string>
+    <string name="service_name">CardEmulation</string>
+    <string name="card_title">Sample Loyalty Card</string>
+    <string name="maxima_card">Maxima lojalumo kortelė</string>
+    <string name="iki_card">IKI lojalumo kortelė</string>
+    <string name="card_data">Kortelės duomenys</string>
 </resources>

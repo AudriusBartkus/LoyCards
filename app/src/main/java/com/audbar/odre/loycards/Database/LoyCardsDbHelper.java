@@ -112,6 +112,47 @@ public class LoyCardsDbHelper extends SQLiteOpenHelper {
 
         insertLoyCardType(db, cardType);
 
+        cardType = new LoyCardType();
+        cardType.title = "Rimi";
+        cardType.description = "Rimi lojalumo kortelė";
+        cardType.dateCreated = new Date();
+        cardType.imageUrl = "https://www.rimi.lt/assets/upload/userfiles/images/logos%20and%20images/rimi-logo-startpage.png";
+
+        insertLoyCardType(db, cardType);
+
+        cardType = new LoyCardType();
+        cardType.title = "Prisma";
+        cardType.description = "Prisma lojalumo kortelė";
+        cardType.dateCreated = new Date();
+        cardType.imageUrl = "http://logonoid.com/images/thumbs/prisma-logo.png";
+
+        insertLoyCardType(db, cardType);
+
+        cardType = new LoyCardType();
+        cardType.title = "Norfa";
+        cardType.description = "Norfa lojalumo kortelė";
+        cardType.dateCreated = new Date();
+        cardType.imageUrl = "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/Norfa_Logo.svg/1280px-Norfa_Logo.svg.png";
+
+        insertLoyCardType(db, cardType);
+
+        cardType = new LoyCardType();
+        cardType.title = "Senukai";
+        cardType.description = "Senukai lojalumo kortelė";
+        cardType.dateCreated = new Date();
+        cardType.imageUrl = "http://vignette2.wikia.nocookie.net/logopedia/images/9/98/Senukai_logo.jpg";
+
+        insertLoyCardType(db, cardType);
+
+        cardType = new LoyCardType();
+        cardType.title = "Elektromarkt";
+        cardType.description = "Elektromarkt lojalumo kortelė";
+        cardType.dateCreated = new Date();
+        cardType.imageUrl = "http://www.elektromarkt.lt/out/azure/src/images/logo.png";
+
+        insertLoyCardType(db, cardType);
+
+
     }
 
     private void insertLoyCardType(SQLiteDatabase db, LoyCardType loyCardType){

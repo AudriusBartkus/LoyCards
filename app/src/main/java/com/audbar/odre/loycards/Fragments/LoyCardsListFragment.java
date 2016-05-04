@@ -156,7 +156,7 @@ public class LoyCardsListFragment extends Fragment {
         }
     }
 
-    public void handleLoyCardsResult(List<LoyCard> loyCards)
+    public void handleLoyCardsResult(final List<LoyCard> loyCards)
     {
         GridView gvItems = (GridView) thisView.findViewById(R.id.gridView);
         LoyCardGridViewAdapter adapter = new LoyCardGridViewAdapter(this.getContext(), loyCards);
@@ -166,7 +166,11 @@ public class LoyCardsListFragment extends Fragment {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(getContext(), "Kolkas nerealizuota", Toast.LENGTH_SHORT).show();
+                LoyCardDetailsFragment cardDetailsFragment = LoyCardDetailsFragment.newInstance(loyCards.get(position));
+                android.support.v4.app.FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+                fragmentTransaction.replace(R.id.content_main, cardDetailsFragment);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
             }
         });
     }
